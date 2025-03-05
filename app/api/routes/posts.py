@@ -1,21 +1,21 @@
-from typing import List, Dict, Any
-from fastapi import APIRouter, Depends, status, Request
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List, Dict
+from fastapi import APIRouter, Depends, status
 
-from app.core.database import get_db
 from app.core.security import get_current_user
 from app.schemas.post import PostCreate, Post, PostDelete
 from app.services.post_service import PostService
 from app.models.user import User
 from app.api.dependencies.request_validators import validate_request_size
+from app.api.dependencies.services import get_post_service
 
 router = APIRouter()
+
 
 @router.post("/posts", response_model=Dict[str, int], status_code=status.HTTP_201_CREATED, tags=["posts"])
 async def add_post(
     post_data: PostCreate,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
+    post_service: PostService = Depends(get_post_service),
     _: None = Depends(validate_request_size)
 ):
     """
@@ -33,13 +33,13 @@ async def add_post(
     Returns:
         Dict[str, int]: Dictionary with the post ID.
     """
-    post_service = PostService(db)
     return await post_service.create_post(post_data.text, current_user)
+
 
 @router.get("/posts", response_model=List[Post], tags=["posts"])
 async def get_posts(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    post_service: PostService = Depends(get_post_service),
 ):
     """
     Get all posts for the authenticated user.
@@ -54,14 +54,14 @@ async def get_posts(
     Returns:
         List[Post]: List of posts belonging to the user.
     """
-    post_service = PostService(db)
     return await post_service.get_posts(current_user)
+
 
 @router.delete("/posts", response_model=Dict[str, str], tags=["posts"])
 async def delete_post(
     post_data: PostDelete,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    post_service: PostService = Depends(get_post_service),
 ):
     """
     Delete a post.
@@ -77,5 +77,4 @@ async def delete_post(
     Returns:
         Dict[str, str]: Success message.
     """
-    post_service = PostService(db)
-    return await post_service.delete_post(post_data.post_id, current_user) 
+    return await post_service.delete_post(post_data.post_id, current_user)
