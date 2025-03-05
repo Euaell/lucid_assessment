@@ -3,10 +3,10 @@
 Simple script to test the API endpoints.
 """
 import requests
-import json
 import time
 
 BASE_URL = "http://localhost:8000"
+
 
 def test_root():
     """Test the root endpoint."""
@@ -15,6 +15,7 @@ def test_root():
     print(response.json())
     print()
     return response.status_code == 200
+
 
 def test_signup():
     """Test the signup endpoint."""
@@ -28,6 +29,7 @@ def test_signup():
     print()
     return response.json().get("access_token")
 
+
 def test_login(email, password):
     """Test the login endpoint."""
     data = {
@@ -39,6 +41,7 @@ def test_login(email, password):
     print(response.json())
     print()
     return response.json().get("access_token")
+
 
 def test_posts(token):
     """Test the posts endpoints."""
@@ -64,6 +67,7 @@ def test_posts(token):
     print(f"Delete post endpoint: {response.status_code}")
     print(response.json())
     print()
+
 
 if __name__ == "__main__":
     print("Testing FastAPI Blog Application API")
@@ -103,4 +107,4 @@ if __name__ == "__main__":
     except requests.exceptions.ConnectionError:
         print("ERROR: Could not connect to the API. Make sure the server is running.")
     except Exception as e:
-        print(f"ERROR: {e}") 
+        print(f"ERROR: {e}")

@@ -1,8 +1,10 @@
-from typing import Optional, List
+
+from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
+
 
 class UserRepository:
     """
@@ -70,4 +72,4 @@ class UserRepository:
         """
         query = select(User).where(User.id == user_id)
         result = await self.db.execute(query)
-        return result.scalar_one_or_none() 
+        return result.scalar_one_or_none()

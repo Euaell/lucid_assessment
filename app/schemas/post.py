@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, validator
 from typing import Optional
 from datetime import datetime
 
+
 class PostBase(BaseModel):
     """
     Base schema for post data.
@@ -18,6 +19,7 @@ class PostBase(BaseModel):
             raise ValueError('Post text cannot be empty')
         return v
 
+
 class PostCreate(PostBase):
     """
     Schema for post creation.
@@ -26,6 +28,7 @@ class PostCreate(PostBase):
         text (str): Content of the post.
     """
     pass
+
 
 class PostInDBBase(PostBase):
     """
@@ -43,6 +46,7 @@ class PostInDBBase(PostBase):
     class Config:
         from_attributes = True
 
+
 class Post(PostInDBBase):
     """
     Schema for post response.
@@ -51,6 +55,7 @@ class Post(PostInDBBase):
     """
     pass
 
+
 class PostDelete(BaseModel):
     """
     Schema for post deletion.
@@ -58,4 +63,4 @@ class PostDelete(BaseModel):
     Attributes:
         post_id (int): ID of the post to delete.
     """
-    post_id: int = Field(..., description="ID of the post to delete") 
+    post_id: int = Field(..., description="ID of the post to delete")
