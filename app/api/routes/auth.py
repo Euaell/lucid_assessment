@@ -8,7 +8,7 @@ from app.api.dependencies.services import get_auth_service
 router = APIRouter()
 
 
-@router.post("/signup", response_model=Token, status_code=status.HTTP_201_CREATED, tags=["auth"])
+@router.post("/signup", response_model=Token, status_code=status.HTTP_201_CREATED)
 async def signup(
     user_data: UserCreate,
     auth_service: AuthService = Depends(get_auth_service)
@@ -21,30 +21,30 @@ async def signup(
     
     Args:
         user_data (UserCreate): User data including email and password.
-        db (AsyncSession): Database session dependency.
+        auth_service (AuthService): Authentication service dependency.
         
     Returns:
-        Token: JWT access token for the new user.
+        Token: Access token for authentication.
     """
     return await auth_service.signup_user(user_data.email, user_data.password)
 
 
-@router.post("/login", response_model=Token, tags=["auth"])
+@router.post("/login", response_model=Token)
 async def login(
     user_data: UserLogin,
     auth_service: AuthService = Depends(get_auth_service)
 ):
     """
-    Login a user.
+    Log in to an existing user account.
     
-    This endpoint authenticates a user with email and password,
+    This endpoint authenticates a user with the provided email and password,
     and returns an access token for authentication.
     
     Args:
-        user_data (UserLogin): User credentials including email and password.
-        db (AsyncSession): Database session dependency.
+        user_data (UserLogin): User data including email and password.
+        auth_service (AuthService): Authentication service dependency.
         
     Returns:
-        Token: JWT access token for the authenticated user.
+        Token: Access token for authentication.
     """
     return await auth_service.login_user(user_data.email, user_data.password)
